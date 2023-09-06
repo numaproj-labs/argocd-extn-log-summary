@@ -1,0 +1,1 @@
+# argocd-extn-log-summary
