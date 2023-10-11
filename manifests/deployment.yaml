@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: log-summarization-service
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log-summarization-service
+  template:
+    metadata:
+      labels:
+        app: log-summarization-service
+    spec:
+      containers:
+        - name: log
+          env:
+            - name: REDIS_HOST
+              value: isbsvc-log-summarization-redis-svc:26379
+            - name: REDIS_MASTERNAME
+              value: "mymaster"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redis-password
+                  name: isbsvc-log-summarization-redis-auth
+          image: docker.intuit.com/quay-rmt/numaio/logsummarizarion/logsummarizationservice:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080

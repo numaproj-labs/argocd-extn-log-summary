@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: log
+spec:
+  containers:
+    - name: log
+      image: quay.io/numaio/logsummarizarion/logsummarizationservice:latest
+      imagePullPolicy: Always
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+  volumes:
+    - name: config-volume
+      configMap:
+        name: log-config
