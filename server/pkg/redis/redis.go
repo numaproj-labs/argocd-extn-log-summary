@@ -2,8 +2,9 @@ package redis
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
-	"github.com/numaproj-labs/argocd-extn-log-summary/server/pkg/common"
+	"github.com/numaproj-labs/logsummerservice/pkg/common"
 	"strconv"
 	"strings"
 
@@ -47,27 +48,8 @@ func NewRedisDB() (*redisDB, error) {
 	return &rdb, nil
 }
 
-func (rdb *redisDB) GetSummarization(ctx context.Context, namespace, objType, name, start, end string) ([]string, error) {
+func (rdb *redisDB) GetSummarization(ctx context.Context, namespace, objType, name, start, end string) ([]map[string]interface{}, error) {
 	key := fmt.Sprintf("%s:%s:%s", namespace, objType, name)
-	for {
-		var cursor uint64
-		var n int
-		var keys []string
-		var err error
-		keys, cursor, err = rdb.client.Scan(ctx, cursor, "*", 10).Result()
-		if err != nil {
-			panic(err)
-		}
-		n += len(keys)
-
-		for _, keyval := range keys {
-			fmt.Println(keyval)
-		}
-
-		if cursor == 0 {
-			break
-		}
-	}
 	startInt, err := strconv.Atoi(start)
 	if err != nil {
 		return nil, err
@@ -78,6 +60,31 @@ func (rdb *redisDB) GetSummarization(ctx context.Context, namespace, objType, na
 	}
 
 	fmt.Println(startInt, endInt)
-	result := rdb.client.ZRangeByScore(ctx, key, &redis.ZRangeBy{Min: start, Max: end})
-	return result.Result()
+	quaryOutput := rdb.client.ZRevRangeByScoreWithScores(ctx, key, &redis.ZRangeBy{Min: start, Max: end})
+	results, err := quaryOutput.Result()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return nil, err
+	}
+	var summaryResults []map[string]interface{}
+	for _, result := range results {
+		summary := fmt.Sprintf("%v", result.Member)
+		fmt.Println(summary)
+		//unquoteResult, err := strconv.Unquote(summary)
+		//if err != nil {
+		//	fmt.Println("Summary Parsing Error:", err)
+		//	continue
+		//}
+		//fmt.Println(unquoteResult)
+		var summaryMap map[string]interface{}
+		err = json.Unmarshal([]byte(summary), &summaryMap)
+		if err != nil {
+			fmt.Println("Summary Parsing Error:", err)
+			continue
+		}
+		summaryMap["timestamp"] = result.Score
+		fmt.Println(summary)
+		summaryResults = append(summaryResults, summaryMap)
+	}
+	return summaryResults, err
 }

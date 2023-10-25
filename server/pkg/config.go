@@ -17,9 +17,6 @@ func NewConfig(path string) *Config {
 		log.Fatal(err)
 	}
 	conf.Data = make(map[string]interface{})
-	err = yaml.Unmarshal(f, conf.Data)
-	if err != nil {
-		log.Fatal(err)
-	}
+	yaml.Unmarshal(f, conf.Data)
 	return &conf
 }
