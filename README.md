@@ -1,1 +1,1 @@
-# argocd-extn-log-summary
+# argocd-extn-numaproj-assist
