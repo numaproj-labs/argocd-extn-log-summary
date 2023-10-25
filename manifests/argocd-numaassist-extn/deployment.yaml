@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: numaproj-assist-backend-service
+  labels:
+    app: numaproj-assist-backend-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: numaproj-assist-backend-service
+  template:
+    metadata:
+      labels:
+        app: numaproj-assist-backend-service
+    spec:
+      containers:
+        - name: log
+          env:
+            - name: REDIS_HOST
+              value: isbsvc-log-summarization-redis-svc:26379
+            - name: REDIS_MASTERNAME
+              value: "mymaster"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: redis-password
+                  name: isbsvc-log-summarization-redis-auth
+          image: quay.io/numaio/numaproj-assist-backend-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
