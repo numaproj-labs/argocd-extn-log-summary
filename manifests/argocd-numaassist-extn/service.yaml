@@ -4,7 +4,7 @@ metadata:
   name: numaproj-assist-backend-service
 spec:
   selector:
-    app: numaproj-assist-backend
+    app: numaproj-assist-backend-service
   ports:
     - protocol: TCP
       port: 8080
