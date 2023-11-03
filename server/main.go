@@ -1,12 +1,15 @@
 package main
 
 import (
-	"log"
-	"net/http"
-
+	"fmt"
+	"github.com/caitlinelfring/go-env-default"
 	"github.com/gin-gonic/gin"
 	"github.com/numaproj-labs/argocd-extn-log-summary/server/pkg"
+	"github.com/numaproj-labs/argocd-extn-log-summary/server/pkg/common"
+	"github.com/numaproj-labs/argocd-extn-log-summary/server/pkg/prometheus"
 	"github.com/penglongli/gin-metrics/ginmetrics"
+	"log"
+	"net/http"
 )
 
 func main() {
@@ -32,19 +35,23 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	handler := NewLogHandler(client)
+	prometheusURL := env.GetDefault(common.PROMETEUS_URL, "http://prometheus.addon-metricset-ns.svc.cluster.local:9090")
+	metricsClient, err := prometheus.NewPrometheusClient(prometheusURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	handler := NewLogHandler(client, metricsClient)
 
 	r.GET("/data/:namespace/:type/:name/:start/:end", func(c *gin.Context) {
 		handler.handle(c)
 	})
+	r.GET("/metrics/:metricsname/:namespace/:application/:start/:end", func(c *gin.Context) {
+		handler.queryMetrics(c)
+	})
 
 	go func() {
-		err := metrics.Run(":8490")
-		if err != nil {
-			panic(err)
-		}
+		metrics.Run(":8490")
 	}()
 	err = http.ListenAndServe(":8080", r)
-	panic(err)
+	fmt.Println("test", err)
 }
