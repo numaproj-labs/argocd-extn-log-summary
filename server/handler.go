@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/numaproj-labs/logsummerservice/pkg"
-	"github.com/numaproj-labs/logsummerservice/pkg/prometheus"
+	"github.com/numaproj-labs/argocd-extn-log-summary/server/pkg"
+	"github.com/numaproj-labs/argocd-extn-log-summary/server/pkg/prometheus"
 	"net/http"
 )
 

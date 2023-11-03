@@ -1,4 +1,4 @@
-module github.com/numaproj-labs/logsummerservice
+module github.com/numaproj-labs/argocd-extn-log-summary/server
 
 go 1.19
 

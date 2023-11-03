@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/numaproj-labs/logsummerservice/pkg/common"
+	"github.com/numaproj-labs/argocd-extn-log-summary/server/pkg/common"
 	"strconv"
 	"strings"
 
