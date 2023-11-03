@@ -9,7 +9,7 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app: numaproj-assist-backend
+    app: numaproj-assist-backend-service
 ---
 apiVersion: apps/v1
 kind: Deployment
