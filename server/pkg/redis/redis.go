@@ -48,7 +48,7 @@ func NewRedisDB() (*redisDB, error) {
 	return &rdb, nil
 }
 
-func (rdb *redisDB) GetSummarization(ctx context.Context, namespace, objType, name, start, end string) ([]map[string]interface{}, error) {
+func (rdb *redisDB) GetSummarization(ctx context.Context, namespace, objType, name, start, end string, anomaly, errorRate map[string]string) ([]map[string]interface{}, error) {
 	key := fmt.Sprintf("%s:%s:%s", namespace, objType, name)
 	startInt, err := strconv.Atoi(start)
 	if err != nil {

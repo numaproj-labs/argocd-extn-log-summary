@@ -8,7 +8,7 @@ import (
 )
 
 type LogSummarizationClient interface {
-	GetSummarization(ctx context.Context, namespace, objType, name, start, end string) ([]map[string]interface{}, error)
+	GetSummarization(ctx context.Context, namespace, objType, name, start, end string, anomaly, errorRate map[string]string) ([]map[string]interface{}, error)
 }
 
 func NewLogClient() (LogSummarizationClient, error) {
