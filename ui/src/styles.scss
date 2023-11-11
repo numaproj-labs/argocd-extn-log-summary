@@ -1,0 +1,26 @@
+// @import 'node_modules/argo-ui/src/styles/config';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes ls-fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+.ls-fade-in-slide-up {
+    animation: ls-fadeIn 0.5s ease-out;
+  }
+
+.application-log-summary {
+  &__Title {
+    text-align: left;
+  }
+
+}
