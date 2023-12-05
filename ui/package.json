@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "webpack --config ./webpack.config.js --watch",
-    "build": "webpack --config ./webpack.config.js && tar -C dist -cvf extension.tar resources"
+    "build": "webpack --config ./webpack.config.js && tar -C dist -cvzf extension.tar.gz resources"
   },
   "eslintConfig": {
     "extends": [

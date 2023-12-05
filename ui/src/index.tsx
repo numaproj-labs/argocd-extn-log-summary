@@ -101,6 +101,7 @@ export const Extension = (props: any) => {
   const [appName, setAppName] = useState<string>("");
   const [resName, setResName] = useState<string>("");
   const [namespace, setNamespace] = useState<string>("");
+  const [resNamespace, setResNamespace] = useState<string>("");
   const [project, setProject] = useState<string>("");
   const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
   const [timer, setTimer] = useState<number>(60);
@@ -195,10 +196,14 @@ export const Extension = (props: any) => {
   }, [application]);
 
   useEffect(() => {
+    setResNamespace(initialResource?.metadata?.namespace || "");
+  }, [application]);
+
+  useEffect(() => {
     if (appName && resName && resource?.kind) {
       const currentTimeInSeconds = Math.floor(Date.now() / 1000);
       const oneHourAgoInSeconds = Math.floor(Date.now() / 1000 - lookback);
-      const errorUrl = `/extensions/logsummary/metrics/namespace_app_rollouts_http_request_error_rate/rollout-numalogic-demo/${resName}/${oneHourAgoInSeconds}/${currentTimeInSeconds}`;
+      const errorUrl = `/extensions/logsummary/metrics/namespace_app_rollouts_http_request_error_rate/${resNamespace}/${resName}/${oneHourAgoInSeconds}/${currentTimeInSeconds}`;
 
       axios
         .get(`${errorUrl}`, {
@@ -235,13 +240,13 @@ export const Extension = (props: any) => {
           // Handle error
         });
     }
-  }, [resource, namespace, appName, lookback, logs]);
+  }, [resource, namespace, appName, lookback, logs, resNamespace]);
 
   useEffect(() => {
     if (appName && resName && resource?.kind) {
       const currentTimeInSeconds = Math.floor(Date.now() / 1000);
       const oneHourAgoInSeconds = Math.floor(Date.now() / 1000 - lookback);
-      const anomalyUrl = `/extensions/logsummary/metrics/namespace_app_rollouts_unified_anomaly/rollout-numalogic-demo/${resName}/${oneHourAgoInSeconds}/${currentTimeInSeconds}`;
+      const anomalyUrl = `/extensions/logsummary/metrics/namespace_app_rollouts_unified_anomaly/${resNamespace}/${resName}/${oneHourAgoInSeconds}/${currentTimeInSeconds}`;
 
       axios
         .get(`${anomalyUrl}`, {
@@ -278,13 +283,13 @@ export const Extension = (props: any) => {
           // Handle error
         });
     }
-  }, [resource, namespace, appName, lookback, logs]);
+  }, [resource, namespace, appName, lookback, logs, resNamespace]);
 
   useEffect(() => {
     if (appName && resName && resource?.kind) {
       const currentTimeInSeconds = Math.floor(Date.now() / 1000);
       const oneHourAgoInSeconds = Math.floor(Date.now() / 1000 - lookback);
-      const errorUrl = `/extensions/logsummary/metrics/namespace_app_rollouts_http_request_error_rate/rollout-numalogic-demo/${resName}/${oneHourAgoInSeconds}/${currentTimeInSeconds}`;
+      const errorUrl = `/extensions/logsummary/metrics/namespace_app_rollouts_http_request_error_rate/${resNamespace}/${resName}/${oneHourAgoInSeconds}/${currentTimeInSeconds}`;
 
       axios
         .get(`${errorUrl}`, {
@@ -314,14 +319,13 @@ export const Extension = (props: any) => {
             });
             metrics.push(metric);
           });
-
           setErrorRateMetricChartData(metrics);
         })
         .catch((error) => {
           // Handle error
         });
     }
-  }, [resource, namespace, appName, lookback, logs]);
+  }, [resource, namespace, appName, lookback, logs, resNamespace]);
 
   const getLogs = useCallback(() => {
     if (appName && resName && resource?.kind) {
@@ -329,7 +333,7 @@ export const Extension = (props: any) => {
       setLoading(true);
       const currentTimeInSeconds = Math.floor(Date.now() / 1000);
       const oneHourAgoInSeconds = Math.floor(Date.now() / 1000 - lookback);
-      const url = `/extensions/logsummary/data/rollout-numalogic-demo/${resource?.kind?.toLowerCase()}/${resName}/${oneHourAgoInSeconds}/${currentTimeInSeconds}`;
+      const url = `/extensions/logsummary/data/${resNamespace}/${resource?.kind?.toLowerCase()}/${resName}/${oneHourAgoInSeconds}/${currentTimeInSeconds}`;
 
       axios
         .get(`${url}`, {
@@ -349,7 +353,7 @@ export const Extension = (props: any) => {
           setLoading(false);
         });
     }
-  }, [resource, namespace, appName, lookback]);
+  }, [resource, namespace, appName, lookback, resNamespace]);
 
   useEffect(() => {
     if (timerElem?.current) {
