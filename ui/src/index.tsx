@@ -319,7 +319,6 @@ export const Extension = (props: any) => {
             });
             metrics.push(metric);
           });
-
           setErrorRateMetricChartData(metrics);
         })
         .catch((error) => {
